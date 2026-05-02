@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "therapy-mode": {
+      "version": "1.1.0",
+      "installedAt": 1777729142202
+    },
+    "herhug": {
+      "version": "1.0.0",
+      "installedAt": 1777729443359
+    },
+    "codex-skill": {
+      "version": "1.0.0",
+      "installedAt": 1777730702371
+    }
+  }
+}

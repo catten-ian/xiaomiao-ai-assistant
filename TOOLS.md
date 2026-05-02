@@ -57,7 +57,11 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 - **⚠️ Variation限制**: api.gpt.ge 的 `/mj/submit/action` 对 variation 返回500上游错误，旧任务（>几分钟）的按钮交互已失效；可用 `--cref` 参数替代 variation 功能
 - **脚本**: `/workspace/skills/midjourney-api/mj_full.py` (提交→等待→下载)
 
-## v3.cm API（通用文字/图片/多模态）
+## Tavily 搜索
+- **API Key**: `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`
+- **端点**: `POST https://api.tavily.com/search`
+- **调用**: `{"query": "...", "api_key": "<KEY>", "max_results": 8, "days": 7}`
+- **用途**: 实时搜索新闻（优于curl爬虫）
 
 ## v3.cm API（通用文字/图片/多模态）
 - **Chat端点**: `https://api.v3.cm/v1/chat/completions`（注意是 `/v1/` 前缀）
