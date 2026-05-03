@@ -30,6 +30,25 @@ data = json.loads(resp.read())
 1. MJ绘画任务：检查 /workspace 目录下是否有未完成的MJ任务日志或任务ID记录，如有则查询状态并下载
 2. Suno音乐任务：检查 /workspace 目录下的 suno_task_ids.json，如有则查询状态
 3. 邮件处理：按现有逻辑执行
+4. **Charade 修护任务**（见下方详情，有空就推进）
+
+---
+## 🛠️ Charade 修护任务（catten.cyou/charade）
+
+**优先级：** 中（有空就推进）
+**仓库：** https://gitee.com/cattend/charade（已克隆到 /tmp/charade）
+
+**目标：**
+1. 用 Codex 修 charade 的 bug
+2. 重新部署到 catten.cyou/charade
+3. 浏览器测试验证
+
+**TODO List：**
+- [ ] 拉取最新 Gitee 代码确认版本
+- [ ] SSH 到服务器排查报错原因（密码：6Cj.@H7QQYcgyq-E）
+- [ ] 用 Codex 修 bug（调用 codex-skill）
+- [ ] 重新部署到 /var/www/charade/
+- [ ] 浏览器测试 catten.cyou/charade
 
 ## 上下文压缩（每次心跳时执行）
 - 调用 `session_status` 检查当前上下文 token 使用量
