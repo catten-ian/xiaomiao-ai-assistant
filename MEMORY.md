@@ -4,6 +4,7 @@
 - **禁止**直接修改 `openclaw.json`
 - **禁止**运行 `openclaw doctor --fix`、`openclaw config fix` 等自动修改命令
 - 配置变更必须通过 `gateway` 工具：`config.get`（读取）、`config.patch`（深度合并更新）
+- **配置备份**：本地 `/workspace/backups/`（权限 555 防误删），每日 23:00 UTC 自动备份
 
 ## ilinkai 平台限制
 - 微信插件：存在 session timeout 问题（网络限制，sandbox 无法维持长连接）

@@ -63,9 +63,10 @@ data = json.loads(resp.read())
   4. 压缩后回复 HEARTBEAT_OK，不汇报压缩细节
 
 ## 每日自检任务（每天 23:00 UTC 执行一次）
-1. **配置备份**：使用 `gateway` 工具获取配置并保存
+1. **本地配置备份**：使用 `gateway` 工具获取配置并保存
    - 执行 `config.get` 获取原始配置
    - 将 raw 内容写入 `/workspace/backups/openclaw_YYYYMMDD.json`
+   - 备份目录权限已设为 555（只读防误删）
    - 备份完成后，将当天记忆收获总结写入 `/workspace/memory/YYYY-MM-DD.md`
 2. **当日记忆总结**（使用 self-improving-agent skill）：
    - 整理当天完成的主要工作、发现的新方法、踩的坑
