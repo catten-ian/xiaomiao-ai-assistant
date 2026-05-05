@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charade 测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#1a1a2e;min-height:100vh;padding:20px;color:#fff}
+.card{max-width:600px;margin:0 auto 20px;background:#16213e;border-radius:12px;padding:20px}
+h1{font-size:20px;margin-bottom:15px;color:#e94560}
+h2{font-size:16px;margin:15px 0 10px;color:#0f3460;border-bottom:1px solid #0f3460;padding-bottom:5px}
+input{width:100%;padding:10px;border:1px solid #0f3460;border-radius:6px;background:#1a1a2e;color:#fff;margin:5px 0}
+button{width:100%;padding:12px;background:#e94560;border:none;border-radius:6px;color:#fff;font-size:14px;cursor:pointer;margin:5px 0}
+button:hover{background:#c73e54}
+button:disabled{background:#555;cursor:not-allowed}
+pre{background:#0f3460;padding:12px;border-radius:6px;margin:10px 0;white-space:pre-wrap;font-size:13px;max-height:300px;overflow-y:auto}
+.row{display:flex;gap:10px}
+.row button{flex:1}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🎮 Charade 游戏测试</h1>
+
+<h2>1. 登录</h2>
+<input type="text" id="username" placeholder="用户名" value="测试玩家">
+<button onclick="login()">登录并匹配</button>
+<pre id="status">等待登录...</pre>
+</div>
+
+<div class="card">
+<h2>2. AI 描述测试</h2>
+<input type="text" id="word" placeholder="输入词语" value="熊猫">
+<button onclick="aiDescribe()">获取AI描述</button>
+<pre id="describeResult">-</pre>
+</div>
+
+<div class="card">
+<h2>3. AI 猜测测试</h2>
+<input type="text" id="desc" placeholder="输入描述">
+<button onclick="aiGuess()">AI猜测</button>
+<pre id="guessResult">-</pre>
+</div>
+
+<div class="card">
+<h2>4. 完整游戏测试</h2>
+<div class="row">
+<button onclick="fullGameTest()">自动测试一局</button>
+</div>
+<pre id="gameLog">-</pre>
+</div>
+
+<script>
+const API = 'https://www.catten.cyou/';
+let user = null;
+
+async function post(url, data = {}) {
+    const res = await fetch(API + url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: Object.entries(data).map(([k,v]) => k + '=' + encodeURIComponent(v)).join('&')
+    });
+    return res.json();
+}
+
+async function get(url) {
+    const res = await fetch(API + url);
+    return res.json();
+}
+
+async function login() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) return alert('请输入用户名');
+    
+    document.getElementById('status').textContent = '登录中...';
+    
+    try {
+        const data = await post('paring_new.php', {username});
+        user = data;
+        
+        if (data.ret_code === 0) {
+            document.getElementById('status').textContent = 
+                `✅ 匹配成功！\n房间: ${data.room}\n对手: ${data.rival}${data.is_ai ? ' (AI)' : ''}\n状态: 游戏中`;
+        } else if (data.ret_code === 2) {
+            document.getElementById('status').textContent = 
+                `✅ 已在房间\n房间: ${data.room}\n对手: ${data.rival || '等待中'}`;
+        } else {
+            document.getElementById('status').textContent = '❌ 匹配失败\n' + JSON.stringify(data, null, 2);
+        }
+    } catch (e) {
+        document.getElementById('status').textContent = '❌ 错误: ' + e.message;
+    }
+}
+
+async function aiDescribe() {
+    const word = document.getElementById('word').value.trim();
+    if (!word) return;
+    
+    document.getElementById('describeResult').textContent = 'AI思考中...';
+    
+    try {
+        const data = await get('ai_player.php?action=describe&word=' + encodeURIComponent(word));
+        document.getElementById('describeResult').textContent = 
+            `词语: ${word}\n\nAI描述:\n${data.description || data.error}`;
+        
+        // 自动填入猜测测试
+        document.getElementById('desc').value = data.description;
+    } catch (e) {
+        document.getElementById('describeResult').textContent = '错误: ' + e.message;
+    }
+}
+
+async function aiGuess() {
+    const desc = document.getElementById('desc').value.trim();
+    if (!desc) return;
+    
+    document.getElementById('guessResult').textContent = 'AI猜测中...';
+    
+    try {
+        const data = await get('ai_player.php?action=guess&description=' + encodeURIComponent(desc));
+        document.getElementById('guessResult').textContent = 
+            `描述: ${desc}\n\nAI猜测: ${data.guess || data.error}`;
+    } catch (e) {
+        document.getElementById('guessResult').textContent = '错误: ' + e.message;
+    }
+}
+
+async function fullGameTest() {
+    const log = document.getElementById('gameLog');
+    log.textContent = '开始测试...\n';
+    
+    try {
+        // 1. 匹配
+        log.textContent += '\n1. 匹配玩家...\n';
+        const matchData = await post('paring_new.php', {username: '自动测试_' + Date.now()});
+        log.textContent += `   房间: ${matchData.room}\n   对手: ${matchData.rival}${matchData.is_ai ? ' (AI)' : ''}\n`;
+        
+        // 2. 选词
+        const words = ['猫', '手机', '学校', '跑步'];
+        const word = words[Math.floor(Math.random() * words.length)];
+        log.textContent += `\n2. 随机选词: ${word}\n`;
+        
+        // 3. AI描述
+        log.textContent += '\n3. AI描述中...\n';
+        const descData = await get('ai_player.php?action=describe&word=' + encodeURIComponent(word));
+        log.textContent += `   "${descData.description}"\n`;
+        
+        // 4. AI猜测
+        log.textContent += '\n4. AI猜测中...\n';
+        const guessData = await get('ai_player.php?action=guess&description=' + encodeURIComponent(descData.description));
+        log.textContent += `   AI猜: "${guessData.guess}"\n`;
+        
+        // 5. 判断结果
+        const isCorrect = guessData.guess.includes(word) || word.includes(guessData.guess.replace('大', ''));
+        log.textContent += `\n5. 结果: ${isCorrect ? '✅ 猜对了！' : '❌ 没猜对'}\n`;
+        log.textContent += `\n测试完成！`;
+        
+    } catch (e) {
+        log.textContent += '\n错误: ' + e.message;
+    }
+}
+</script>
+</body>
+</html>
