@@ -1,0 +1,37 @@
+{
+    "products": [
+        {"id": 1, "category": "wenchuang", "icon": "🎨", "name": "老师立牌", "price": "6.6", "desc": "迪拜老钱风造型", "image": "https://img.cdn1.vip/i/69fac3788a9dc_1778041720.webp"},
+        {"id": 2, "category": "wenchuang", "icon": "🕯️", "name": "香薰蜡烛", "price": "10", "desc": "丝路香氛", "image": "https://img.cdn1.vip/i/69fac3692841b_1778041705.webp"},
+        {"id": 3, "category": "wenchuang", "icon": "🖼️", "name": "迪拜冰箱贴", "price": "10", "desc": "哈利法塔", "image": "https://img.cdn1.vip/i/69fac3762d397_1778041718.webp"},
+        {"id": 4, "category": "wenchuang", "icon": "🏺", "name": "沙漠许愿瓶", "price": "10", "desc": "装满星沙", "image": "https://img.cdn1.vip/i/69fac36673805_1778041702.webp"},
+        {"id": 5, "category": "wenchuang", "icon": "💡", "name": "迪拜琉璃灯", "price": "10", "desc": "千夜梦境", "image": "https://img.cdn1.vip/i/69fac3729a7e3_1778041714.webp"},
+        {"id": 6, "category": "food", "icon": "🌴", "name": "阿拉伯椰枣", "price": "", "desc": "沙漠甜蜜", "image": "https://img.cdn1.vip/i/69fac370615f0_1778041712.webp"},
+        {"id": 7, "category": "food", "icon": "🍫", "name": "特产巧克力", "price": "", "desc": "金箔点缀", "image": "https://img.cdn1.vip/i/69fac36d2e007_1778041709.webp"},
+        {"id": 8, "category": "food", "icon": "🥩", "name": "金箔牛排", "price": "", "desc": "尊贵体验", "image": "https://img.cdn1.vip/i/69fac37ad9297_1778041722.webp"},
+        {"id": 9, "category": "food", "icon": "🥤", "name": "骆驼奶茶", "price": "", "desc": "丝路风味", "image": "https://img.cdn1.vip/i/69fac37e2aee2_1778041726.webp"}
+    ],
+    "team": [
+        {"id": 1, "role": "丝路使者", "name": "陈默雷"},
+        {"id": 2, "role": "丝城小厮", "name": "周轩逸"},
+        {"id": 3, "role": "丝城小厮", "name": "王依辰"},
+        {"id": 4, "role": "丝城小厮", "name": "吕彦锦"}
+    ],
+    "activity": {
+        "title": "沙海寻珠",
+        "subtitle": "珍珠鉴真小游戏",
+        "rules": [
+            {
+                "title": "游戏规则",
+                "items": ["每人限玩 1 次", "展示 6 颗珍珠（2真+4仿）", "在规定时间内找出真珍珠"]
+            },
+            {
+                "title": "奖励规则",
+                "items": ["找出 1 颗：赠送 1 颗小珠子", "找出 2 颗：赠送 5 颗珍珠珠", "全猜错：8 折串珠优惠"]
+            },
+            {
+                "title": "DIY 串珠区",
+                "items": ["天然珍珠：3 元/颗", "赠送珠/普通珠：免费", "提供弹力线、工具"]
+            }
+        ]
+    }
+}

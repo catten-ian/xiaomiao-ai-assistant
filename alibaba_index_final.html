@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>阿里巴巴 | 丝路漫行·帆影驼铃</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f4d03f;
+            --gold-dark: #b8860b;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text-light: #f5f5f5;
+            --text-muted: #a0a0a0;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        header {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        #particles-js {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .header-bg-local {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("arabian_sky.png") center center / cover no-repeat;
+            z-index: 0;
+        }
+        
+        .header-bg-cdn {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("https://img.cdn1.vip/i/69fb10c71d058_1778061511.webp") center center / cover no-repeat;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .header-bg-cdn.loaded {
+            opacity: 1;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.7) 100%);
+            z-index: 2;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 3;
+            padding: 2rem 1.5rem;
+        }
+        
+        .arabic-title {
+            font-family: 'Amiri', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            letter-spacing: 0.2em;
+            margin-bottom: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 12vw, 6rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.8rem;
+        }
+        
+        .subtitle {
+            font-size: clamp(1rem, 4vw, 1.8rem);
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+        
+        .theme-text {
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 0.6rem 1.5rem;
+            display: inline-block;
+            letter-spacing: 0.15em;
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--gold);
+            font-size: 0.85rem;
+            animation: bounce 2s infinite;
+            opacity: 0.8;
+            z-index: 3;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.2rem;
+        }
+        
+        section { margin-bottom: 3rem; }
+        
+        h2 {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px; left: 0;
+            width: 50px; height: 3px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+        }
+        
+        .info-card h3 {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .info-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        
+        .product-card {
+            background: linear-gradient(145deg, #1a1a1a, #141414);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+        
+        .product-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .product-name { font-size: 0.95rem; color: var(--text-light); margin-bottom: 0.3rem; }
+        .product-price { color: var(--gold); font-size: 1.2rem; font-weight: 700; }
+        .product-desc { color: var(--text-muted); font-size: 0.75rem; margin-top: 0.3rem; }
+        
+        .activity-section {
+            background: linear-gradient(145deg, #1a1410, #0f0f0f);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .activity-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .activity-rules {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .rule-box {
+            background: rgba(212, 175, 55, 0.05);
+            border-left: 3px solid var(--gold);
+            padding: 1rem;
+        }
+        
+        .rule-box h4 { color: var(--gold); margin-bottom: 0.8rem; font-size: 1rem; }
+        .rule-box ul { list-style: none; color: var(--text-muted); font-size: 0.9rem; }
+        .rule-box li { padding: 0.4rem 0 0.4rem 1.2rem; position: relative; }
+        .rule-box li::before { content: '◆'; position: absolute; left: 0; color: var(--gold); font-size: 0.6rem; }
+        
+        .team-section { text-align: center; margin-top: 1.5rem; }
+        .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+        
+        .team-member {
+            background: var(--bg-card);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .team-member:hover { border-color: var(--gold); transform: translateY(-3px); }
+        .team-role { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .team-name { font-size: 1rem; color: var(--text-light); }
+        
+        footer {
+            background: linear-gradient(to top, #050505, #0a0a0a);
+            padding: 2rem 1.2rem;
+            text-align: center;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .footer-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; }
+        .footer-text span { color: var(--gold); }
+        .contact-info { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212, 175, 55, 0.1); }
+        .contact-item { display: block; margin: 0.5rem 0; color: var(--text-muted); font-size: 0.85rem; }
+        .contact-item strong { color: var(--gold); }
+        
+        @media (max-width: 768px) {
+            header { min-height: 90vh; }
+            .header-content { padding: 1.5rem 1rem; }
+            .arabic-title { font-size: 1rem; margin-bottom: 0.5rem; }
+            h1 { margin-bottom: 0.5rem; }
+            .subtitle { margin-bottom: 1rem; }
+            .theme-text { padding: 0.5rem 1.2rem; font-size: 0.85rem; }
+            .scroll-hint { bottom: 1rem; font-size: 0.75rem; }
+            main { padding: 2rem 1rem; }
+            section { margin-bottom: 2.5rem; }
+            h2 { font-size: 1.4rem; margin-bottom: 1.2rem; }
+            .info-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+            .info-card { padding: 1.2rem; }
+            .info-card h3 { font-size: 1rem; }
+            .info-card p { font-size: 0.9rem; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            .product-card { padding: 0.8rem; }
+            .product-icon { font-size: 1.8rem; margin-bottom: 0.3rem; }
+            .product-name { font-size: 0.85rem; }
+            .product-price { font-size: 1.1rem; }
+            .product-desc { font-size: 0.7rem; }
+            .activity-section { padding: 1.2rem; }
+            .activity-title { font-size: 1.2rem; }
+            .rule-box { padding: 0.8rem; }
+            .rule-box h4 { font-size: 0.95rem; }
+            .rule-box ul { font-size: 0.85rem; }
+            .team-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            .team-member { padding: 0.8rem; }
+            .team-role { font-size: 0.75rem; }
+            .team-name { font-size: 0.9rem; }
+            footer { padding: 1.5rem 1rem; }
+            .footer-text { font-size: 0.8rem; }
+            .contact-item { font-size: 0.8rem; }
+        }
+        
+        @media (max-width: 374px) {
+            h1 { font-size: 2.2rem; }
+            .products-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: 1fr; }
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-bg-local"></div>
+        <div class="header-bg-cdn" id="headerBgCdn"></div>
+        <div id="particles-js"></div>
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <div class="arabic-title">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+            <h1>阿里巴巴</h1>
+            <p class="subtitle">第十九届狂欢日 · 2401班</p>
+            <div class="theme-text">帆影渡沙海，驼香醉丝路</div>
+        </div>
+        <div class="scroll-hint">↓ 向下探索 ↓</div>
+    </header>
+    
+    <main>
+        <section class="fade-in">
+            <h2>丝路瑰宝</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>班级</h3>
+                    <p>高二（1）班 · 2401</p>
+                </div>
+                <div class="info-card">
+                    <h3>主题寓意</h3>
+                    <p>源自《一千零一夜》中阿里巴巴与四十大盗的故事，寓意开启财富之门，易于记忆并具有全球化吸引力。</p>
+                </div>
+                <div class="info-card">
+                    <h3>经营范围</h3>
+                    <p>商品销售 · 特色传统活动 · 文化知识问答 · AI创新融合</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="fade-in">
+            <h2>文创珍品</h2>
+            <div class="products-grid" id="productsWenchuang"></div>
+        </section>
+        
+        <section class="fade-in">
+            <h2>丝路美食</h2>
+            <div class="products-grid" id="productsFood"></div>
+        </section>
+        
+        <section class="fade-in">
+            <h2 id="activityTitle">沙海寻珠</h2>
+            <div class="activity-section">
+                <div class="activity-title" id="activitySubtitle">珍珠鉴真小游戏</div>
+                <div class="activity-rules" id="activityRules"></div>
+            </div>
+        </section>
+        
+        <section class="fade-in">
+            <h2>丝路使者</h2>
+            <div class="team-section">
+                <div class="team-grid" id="teamGrid"></div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-text">
+            <span>帆影渡沙海，驼香醉丝路</span><br><br>
+            第十九届狂欢日 · 2401班 阿里巴巴
+        </div>
+        <div class="contact-info">
+            <div class="contact-item"><strong>负责人：</strong>陈默雷 · 19370697379</div>
+            <div class="contact-item"><strong>微信：</strong>13601976921</div>
+        </div>
+    </footer>
+    
+    <script>
+        const cdnBg = new Image();
+        cdnBg.onload = function() {
+            document.getElementById('headerBgCdn').classList.add('loaded');
+        };
+        cdnBg.src = 'https://img.cdn1.vip/i/69fb10c71d058_1778061511.webp';
+        
+        async function loadData() {
+            try {
+                const res = await fetch('api.php?action=get_all');
+                const data = await res.json();
+                
+                if (data.success) {
+                    renderProducts('productsWenchuang', data.products.filter(p => p.category === 'wenchuang'));
+                    renderProducts('productsFood', data.products.filter(p => p.category === 'food'));
+                    renderTeam(data.team);
+                    if (data.activity) {
+                        renderActivity(data.activity);
+                    }
+                }
+            } catch (e) {
+                loadDefaultData();
+            }
+        }
+        
+        function renderProducts(containerId, products) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = products.map(p => `
+                <div class="product-card">
+                    ${p.image ? `<img src="${p.image}" class="product-img" onerror="this.style.display='none'">` : ''}
+                    <div class="product-icon">${p.icon}</div>
+                    <div class="product-name">${p.name}</div>
+                    ${p.price ? `<div class="product-price">¥${p.price}</div>` : ''}
+                    <div class="product-desc">${p.desc}</div>
+                </div>
+            `).join('');
+        }
+        
+        function renderTeam(team) {
+            const container = document.getElementById('teamGrid');
+            container.innerHTML = team.map(t => `
+                <div class="team-member">
+                    <div class="team-role">${t.role}</div>
+                    <div class="team-name">${t.name}</div>
+                </div>
+            `).join('');
+        }
+        
+        function renderActivity(activity) {
+            if (activity.title) {
+                document.getElementById('activityTitle').textContent = activity.title;
+            }
+            if (activity.subtitle) {
+                document.getElementById('activitySubtitle').textContent = activity.subtitle;
+            }
+            
+            const container = document.getElementById('activityRules');
+            if (activity.rules && activity.rules.length > 0) {
+                container.innerHTML = activity.rules.map(rule => `
+                    <div class="rule-box">
+                        <h4>${rule.title}</h4>
+                        <ul>
+                            ${rule.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        function loadDefaultData() {
+            document.getElementById('productsWenchuang').innerHTML = `
+                <div class="product-card"><div class="product-icon">🎨</div><div class="product-name">老师立牌</div><div class="product-price">¥6.6</div><div class="product-desc">迪拜老钱风造型</div></div>
+                <div class="product-card"><div class="product-icon">🕯️</div><div class="product-name">香薰蜡烛</div><div class="product-price">¥10</div><div class="product-desc">丝路香氛</div></div>
+                <div class="product-card"><div class="product-icon">🖼️</div><div class="product-name">迪拜冰箱贴</div><div class="product-price">¥10</div><div class="product-desc">哈利法塔</div></div>
+                <div class="product-card"><div class="product-icon">🏺</div><div class="product-name">沙漠许愿瓶</div><div class="product-price">¥10</div><div class="product-desc">装满星沙</div></div>
+                <div class="product-card"><div class="product-icon">💡</div><div class="product-name">迪拜琉璃灯</div><div class="product-price">¥10</div><div class="product-desc">千夜梦境</div></div>
+            `;
+            document.getElementById('productsFood').innerHTML = `
+                <div class="product-card"><div class="product-icon">🌴</div><div class="product-name">阿拉伯椰枣</div><div class="product-desc">沙漠甜蜜</div></div>
+                <div class="product-card"><div class="product-icon">🍫</div><div class="product-name">特产巧克力</div><div class="product-desc">金箔点缀</div></div>
+                <div class="product-card"><div class="product-icon">🥩</div><div class="product-name">金箔牛排</div><div class="product-desc">尊贵体验</div></div>
+                <div class="product-card"><div class="product-icon">🥤</div><div class="product-name">骆驼奶茶</div><div class="product-desc">丝路风味</div></div>
+            `;
+            document.getElementById('teamGrid').innerHTML = `
+                <div class="team-member"><div class="team-role">丝路使者</div><div class="team-name">陈默雷</div></div>
+                <div class="team-member"><div class="team-role">丝城小厮</div><div class="team-name">周轩逸</div></div>
+                <div class="team-member"><div class="team-role">丝城小厮</div><div class="team-name">王依辰</div></div>
+                <div class="team-member"><div class="team-role">丝城小厮</div><div class="team-name">吕彦锦</div></div>
+            `;
+            document.getElementById('activityRules').innerHTML = `
+                <div class="rule-box"><h4>游戏规则</h4><ul><li>每人限玩 1 次</li><li>展示 6 颗珍珠（2真+4仿）</li><li>在规定时间内找出真珍珠</li></ul></div>
+                <div class="rule-box"><h4>奖励规则</h4><ul><li>找出 1 颗：赠送 1 颗小珠子</li><li>找出 2 颗：赠送 5 颗珍珠珠</li><li>全猜错：8 折串珠优惠</li></ul></div>
+                <div class="rule-box"><h4>DIY 串珠区</h4><ul><li>天然珍珠：3 元/颗</li><li>赠送珠/普通珠：免费</li><li>提供弹力线、工具</li></ul></div>
+            `;
+        }
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+        
+        loadData();
+        
+        // 粒子特效
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];        
+        function resizeCanvas() {
+            const header = document.querySelector('header');
+            canvas.width = header.offsetWidth;
+            canvas.height = header.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // 创建粒子
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedY = Math.random() * 0.5 + 0.2;
+                this.speedX = Math.random() * 0.3 - 0.15;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.twinkle = Math.random() * 0.02;
+                this.twinkleSpeed = Math.random() * 0.05 + 0.02;
+            }
+            
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.opacity += this.twinkle;
+                
+                if (this.opacity > 0.8 || this.opacity < 0.2) {
+                    this.twinkle = -this.twinkle;
+                }
+                
+                if (this.y > canvas.height) {
+                    this.y = 0;
+                    this.x = Math.random() * canvas.width;
+                }
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+                ctx.fill();
+                
+                // 添加光晕效果
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(244, 211, 63, ${this.opacity * 0.3})`;
+                ctx.fill();
+            }
+        }
+        
+        // 初始化粒子
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+        
+        // 动画循环
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
+</body>
+</html>
