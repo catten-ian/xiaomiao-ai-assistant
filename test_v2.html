@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Charade 双人测试 v2</title>
+<title>Charade 双人测试 - 多轮版</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,sans-serif;background:#1a1a2e;min-height:100vh;color:#fff;padding:20px}
@@ -29,11 +29,13 @@ pre{background:#0f3460;padding:12px;border-radius:6px;margin:10px 0;white-space:
 .status.playing{background:#2196F3}
 .game-info{background:#0f3460;border-radius:12px;padding:20px;margin-top:20px}
 .round-info{font-size:18px;color:#e94560;margin-bottom:10px}
+.result-box{background:#4CAF50;padding:15px;border-radius:8px;margin:10px 0}
+.result-box.wrong{background:#f44336}
 </style>
 </head>
 <body>
 <div class="container">
-<h1>🎮 Charade 双人测试 v2</h1>
+<h1>🎮 Charade 双人测试 - 多轮版</h1>
 <div class="round-info" id="roundInfo">第 1 轮</div>
 
 <div class="players">
@@ -63,7 +65,7 @@ pre{background:#0f3460;padding:12px;border-radius:6px;margin:10px 0;white-space:
 <p>1. 玩家A登录 → 创建房间 → 等待</p>
 <p>2. 玩家B登录 → 加入房间 → 开始游戏</p>
 <p>3. 描述者选词并描述，猜测者猜词</p>
-<p>4. 完成后点击"下一轮"继续测试</p>
+<p>4. <strong>完成一轮后，点击"下一轮"继续测试（至少2轮）</strong></p>
 </div>
 </div>
 
@@ -75,6 +77,7 @@ let players = {
 };
 let currentRound = 1;
 let gameResults = [];
+let pollIntervals = {};
 
 async function post(url, data = {}) {
 const res = await fetch(API + url, {
@@ -134,7 +137,7 @@ setStatus(player, '等待中');
 log(player, `✅ 房间: ${data.room}\nID: ${data.room_id}\n等待对手...`);
 
 // 开始轮询
-pollOpponent(player);
+startPolling(player, 'opponent');
 } else {
 log(player, '❌ ' + (data.error || '失败'));
 }
@@ -143,16 +146,27 @@ log(player, '❌ ' + e.message);
 }
 }
 
-async function pollOpponent(player) {
-const poll = setInterval(async () => {
+function startPolling(player, type) {
+const key = `p${player}_${type}`;
+if (pollIntervals[key]) clearInterval(pollIntervals[key]);
+
+pollIntervals[key] = setInterval(async () => {
 try {
 const data = await get(`check_room_status_v2.php?room_id=${players[player].room}&user_id=${players[player].id}`);
-if (data.has_opponent && data.room_status === 2) {
-clearInterval(poll);
+if (type === 'opponent' && data.has_opponent && data.room_status === 2) {
+clearInterval(pollIntervals[key]);
 setStatus(player, '游戏中');
 players[player].role = data.role;
 log(player, `✅ 对手: ${data.rival}\n角色: ${data.role === 'describer' ? '描述者' : '猜测者'}`);
 startGame(player, data);
+} else if (type === 'word' && data.current_word) {
+clearInterval(pollIntervals[key]);
+// 描述者已选词
+checkDescription(player);
+} else if (type === 'description' && data.description) {
+clearInterval(pollIntervals[key]);
+// 描述已发送，猜测者可以猜
+showGuessUI(player, data.description);
 }
 } catch (e) {}
 }, 1500);
@@ -207,7 +221,7 @@ gameDiv.innerHTML = `
 `;
 
 // 轮询获取词语状态
-pollWord(player);
+startPolling(player, 'word');
 }
 }
 
@@ -239,58 +253,111 @@ async function sendDesc(player) {
 const desc = document.getElementById('descInput' + player).value.trim();
 if (!desc) return alert('请输入描述');
 
+const data = await post('send_description.php', {
+room_id: players[player].room,
+description: desc
+});
+
+if (data.ret_code === 0) {
 document.getElementById('p' + player + 'Game').innerHTML = `
 <h3>描述已发送</h3>
 <p>你的描述: ${desc}</p>
 <p>等待猜测者回答...</p>
-<button onclick="nextRound(${player})">下一轮</button>
 `;
 
-// 保存结果
-gameResults.push({round: currentRound, describer: players[player].name, word: players[player].word, description: desc});
+// 开始轮询猜测结果
+startPollingGuessResult(player);
+}
 }
 
-async function pollWord(player) {
-const poll = setInterval(async () => {
+function startPollingGuessResult(player) {
+const key = `p${player}_guess_result`;
+if (pollIntervals[key]) clearInterval(pollIntervals[key]);
+
+pollIntervals[key] = setInterval(async () => {
 try {
 const data = await get(`check_room_status_v2.php?room_id=${players[player].room}&user_id=${players[player].id}`);
-if (data.current_word) {
-clearInterval(poll);
-document.getElementById('desc' + player).innerHTML = `<p>描述者已选词，等待描述...</p>`;
-}
+// 检查是否有猜测结果（通过 room status 或其他字段判断）
+// 这里简化处理，等待一段时间后显示下一轮按钮
 } catch (e) {}
-}, 1500);
+}, 2000);
+}
+
+async function checkDescription(player) {
+const data = await get(`check_room_status_v2.php?room_id=${players[player].room}&user_id=${players[player].id}`);
+if (data.description) {
+showGuessUI(player, data.description);
+}
+}
+
+function showGuessUI(player, description) {
+document.getElementById('desc' + player).innerHTML = `<p><strong>描述：</strong>${description}</p>`;
+document.getElementById('guess' + player).style.display = 'block';
+document.getElementById('guessBtn' + player).style.display = 'block';
 }
 
 async function submitGuess(player) {
 const guess = document.getElementById('guess' + player).value.trim();
 if (!guess) return;
 
+const data = await post('submit_guess.php', {
+room_id: players[player].room,
+guess: guess
+});
+
+if (data.ret_code === 0) {
+const resultClass = data.is_correct ? 'result-box' : 'result-box wrong';
 document.getElementById('p' + player + 'Game').innerHTML = `
-<h3>你的猜测: ${guess}</h3>
+<div class="${resultClass}">
+<h3>${data.is_correct ? '✅ 猜对了！' : '❌ 猜错了'}</h3>
+<p>你的猜测: ${guess}</p>
+<p>正确答案: ${data.correct_word}</p>
+</div>
 <button onclick="nextRound(${player})">下一轮</button>
 `;
+
+// 通知描述者结果
+gameResults.push({
+round: currentRound,
+guesser: players[player].name,
+guess: guess,
+correct: data.is_correct,
+word: data.correct_word
+});
+}
 }
 
 async function nextRound(player) {
 currentRound++;
 document.getElementById('roundInfo').textContent = `第 ${currentRound} 轮`;
 
-if (currentRound > 3) {
-alert('测试完成！共完成3轮游戏。');
-document.getElementById('p1Game').innerHTML = '<h3>测试完成</h3>';
-document.getElementById('p2Game').innerHTML = '<h3>测试完成</h3>';
-return;
+// 调用 reset_room.php 重置房间
+const data = await post('reset_room.php', {room_id: players[player].room});
+
+if (data.ret_code === 0) {
+// 更新两个玩家的角色
+const roomData = await get(`check_room_status_v2.php?room_id=${players[1].room}&user_id=${players[1].id}`);
+players[1].role = roomData.role;
+
+const roomData2 = await get(`check_room_status_v2.php?room_id=${players[2].room}&user_id=${players[2].id}`);
+players[2].role = roomData2.role;
+
+// 根据新角色显示UI
+if (players[1].role === 'describer') {
+startGame(1, {role: 'describer'});
+document.getElementById('p2Game').innerHTML = '<h3>等待描述者选词...</h3><div id="desc2">-</div><input type="text" id="guess2" placeholder="输入猜测" style="display:none"><button onclick="submitGuess(2)" id="guessBtn2" style="display:none">提交</button>';
+startPolling(2, 'word');
+} else {
+startGame(2, {role: 'describer'});
+document.getElementById('p1Game').innerHTML = '<h3>等待描述者选词...</h3><div id="desc1">-</div><input type="text" id="guess1" placeholder="输入猜测" style="display:none"><button onclick="submitGuess(1)" id="guessBtn1" style="display:none">提交</button>';
+startPolling(1, 'word');
 }
 
-// 重置房间
-await sshpass -p '6Cj.@H7QQYcgyq-E' ssh root@217.69.4.85 "mariadb -u charade -ppwdtest1 -P 3307 charade -e 'UPDATE tb_room SET status=4 WHERE id=${players[player].room};'";
-
-// 重新开始
-document.getElementById('p1Game').innerHTML = '';
-document.getElementById('p2Game').innerHTML = '';
-log(1, '准备下一轮...');
-log(2, '准备下一轮...');
+log(1, `第 ${currentRound} 轮开始\n角色: ${players[1].role === 'describer' ? '描述者' : '猜测者'}`);
+log(2, `第 ${currentRound} 轮开始\n角色: ${players[2].role === 'describer' ? '描述者' : '猜测者'}`);
+} else {
+alert('重置房间失败：' + data.error);
+}
 }
 </script>
 </body>

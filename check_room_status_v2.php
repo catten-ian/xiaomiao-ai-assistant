@@ -19,7 +19,7 @@ if (!$user_id || !$room_id) {
 }
 
 // 查询房间状态
-$stmt = mysqli_prepare($conn, "SELECT name, user_id0, user_id1, status, current_word, word_id FROM tb_room WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT name, user_id0, user_id1, status, current_word, word_id, description, round FROM tb_room WHERE id = ?");
 mysqli_stmt_bind_param($stmt, 'i', $room_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -60,13 +60,19 @@ $response = [
     'has_opponent' => !empty($rival_id),
     'current_word' => $room['current_word'],
     'word_id' => $room['word_id'],
+    'description' => $room['description'],
+    'round' => (int)$room['round'],
     'is_host' => $is_host
 ];
 
-// 如果游戏开始，确定角色
+// 根据轮数判断角色：奇数轮 user_id0 是描述者，偶数轮 user_id1 是描述者
 if ($room['status'] == 2 && $rival_id) {
-    // 房主是描述者，加入者是猜测者
-    $response['role'] = $is_host ? 'describer' : 'guesser';
+    $is_odd_round = ($room['round'] % 2 === 1);
+    if ($is_odd_round) {
+        $response['role'] = $is_host ? 'describer' : 'guesser';
+    } else {
+        $response['role'] = $is_host ? 'guesser' : 'describer';
+    }
     $_SESSION['role'] = $response['role'];
     
     // 更新用户状态为游戏中
