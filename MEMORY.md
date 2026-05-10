@@ -35,6 +35,11 @@
 - `/workspace/cat.png` - 猫咪图片
 - 白猫图片（CDN: `https://cdn.hailuoai.com/mcp/cdn_upload/492155893819461639/379478028497967/1774201727_fd5eb870.png`）
 
+## 绘画工具偏好（2026-05-10 更新）
+- **优先使用**：`nano-banana-2-2k`（生物结构图、高质量图片生成）
+- 备选：Midjourney API（艺术风格图片）
+- 脚本位置：`/workspace/nano_banana.py`
+
 ## 诗歌创作记录
 - 主题：魔方 × 校园时光（v3.cm 平台测试）
 - **Claude Sonnet 推荐**：`魔方六面转流年，指尖错落色斑斓。教室窗外梧桐老，狂欢夜里少年眠。拼图未完人已散，留得残局待明天。`
