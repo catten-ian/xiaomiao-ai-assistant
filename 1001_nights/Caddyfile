@@ -1,0 +1,122 @@
+# 根域名重定向到 www
+catten.cyou {
+    redir https://www.catten.cyou{uri} permanent
+}
+
+www.catten.cyou {
+ # 阿里巴巴
+ redir /alibaba /alibaba/ 308
+ handle_path /alibaba/* {
+  root * /var/www/html/alibaba
+  try_files {path} /index.html
+  @is_php {
+   file *.php
+  }
+  php_fastcgi @is_php 127.0.0.1:9074
+  file_server
+  encode gzip zstd
+ }
+
+ # 一千零一夜
+ redir /1001nights /1001nights/ 308
+ handle_path /1001nights/* {
+  root * /var/www/1001nights
+  try_files {path} /index.html
+  @is_php {
+   file *.php
+  }
+  php_fastcgi @is_php 127.0.0.1:9074
+  file_server
+  encode gzip zstd
+ }
+
+ # 文件托管
+ handle_path /file* {
+  root * /var/www/charade/filehost
+  try_files {path} {path}/index.php?{query}
+  php_fastcgi 127.0.0.1:9074
+  file_server
+ }
+
+ # 小喵AI助手
+ handle_path /ai/* {
+  reverse_proxy localhost:3001
+ }
+
+ # SillyTavern 酒馆
+ handle /tavern/* {
+  uri strip_prefix /tavern
+  reverse_proxy localhost:8000
+ }
+
+ # Jung
+ handle /jung/* {
+  root * /var/www/jung
+  try_files {path} /index.html
+  file_server
+ }
+
+ # Charade
+ handle_path /charade/* {
+  root * /var/www/charade/charade
+  try_files {path} {path}/index.php?{query}
+  php_fastcgi 127.0.0.1:9074
+  file_server
+  encode gzip zstd
+ }
+
+ # Chat
+ handle /chat/* {
+  root * /var/www/charade
+  try_files /chat{path} /chat/index.html
+  @is_php {
+   file *.php
+  }
+  php_fastcgi @is_php 127.0.0.1:9074
+  file_server
+ }
+
+ # Web 代理（Node-Unblocker）
+ handle /proxy/* {
+  reverse_proxy localhost:8081
+ }
+
+ # Web 网页代理（旧版 PHP）
+ handle /webproxy/* {
+  root * /var/www/webproxy
+  try_files {path} {path}/index.php?{query}
+  @is_php {
+   file *.php
+  }
+  php_fastcgi @is_php 127.0.0.1:9074
+  file_server
+  encode gzip zstd
+ }
+
+ # Realtime Voice
+ handle_path /voice/* {
+  reverse_proxy localhost:3335
+ }
+
+ redir /jung /jung/ 308
+ redir /proxy /proxy/ 308
+ redir /webproxy /webproxy/ 308
+
+ root * /var/www/charade
+ try_files {path} {path}/index.php?{query}
+ php_fastcgi 127.0.0.1:9074
+ file_server
+ encode gzip zstd
+}
+
+# SillyTavern 酒馆（子域名）
+tavern.catten.cyou {
+ reverse_proxy localhost:8000
+}
+
+# Xray REALITY 代理信息页
+xray.catten.cyou {
+    root * /var/www/xray
+    try_files {path} /index.html
+    file_server
+}

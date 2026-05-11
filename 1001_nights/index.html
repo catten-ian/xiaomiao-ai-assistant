@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一千零一夜 · 讲故事续命</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'Songti SC', serif;
+            background: linear-gradient(135deg, #1a0a00 0%, #2d1810 50%, #1a0a00 100%);
+            min-height: 100vh;
+            color: #f4e4c1;
+            overflow-x: hidden;
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 标题 */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #8b6914;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 3em;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #c9a961;
+            font-style: italic;
+        }
+
+        /* 生命计数器 */
+        .life-counter {
+            background: linear-gradient(135deg, #2d1810 0%, #4a2c1a 100%);
+            border: 2px solid #8b6914;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .life-label {
+            font-size: 1.1em;
+            color: #c9a961;
+            margin-bottom: 10px;
+        }
+
+        .life-number {
+            font-size: 4em;
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .life-unit {
+            font-size: 1.5em;
+            color: #c9a961;
+        }
+
+        /* 故事区域 */
+        .story-container {
+            background: linear-gradient(135deg, #2d1810 0%, #3d241a 100%);
+            border: 2px solid #8b6914;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            min-height: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .story-title {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #8b6914;
+        }
+
+        .story-content {
+            font-size: 1.1em;
+            line-height: 2;
+            color: #f4e4c1;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .story-content p {
+            margin-bottom: 15px;
+            text-indent: 2em;
+        }
+
+        .cliffhanger {
+            font-style: italic;
+            color: #ffd700;
+            text-align: center;
+            font-size: 1.3em;
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px dashed #8b6914;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        /* 输入区域 */
+        .input-container {
+            background: linear-gradient(135deg, #2d1810 0%, #3d241a 100%);
+            border: 2px solid #8b6914;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-label {
+            font-size: 1.2em;
+            color: #c9a961;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .input-hint {
+            font-size: 0.9em;
+            color: #8b7355;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .keyword-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            background: #1a0a00;
+            border: 2px solid #8b6914;
+            border-radius: 10px;
+            color: #f4e4c1;
+            font-family: inherit;
+            margin-bottom: 15px;
+        }
+
+        .keyword-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .keyword-input::placeholder {
+            color: #6b5a3e;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #8b6914 0%, #c9a961 100%);
+            border: none;
+            border-radius: 10px;
+            color: #1a0a00;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #4a3a2a;
+            color: #6b5a3e;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 历史记录 */
+        .history-container {
+            background: linear-gradient(135deg, #2d1810 0%, #3d241a 100%);
+            border: 2px solid #8b6914;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .history-title {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #8b6914;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .history-day {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .history-keyword {
+            color: #c9a961;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .history-preview {
+            color: #8b7355;
+            font-size: 0.9em;
+        }
+
+        /* 加载动画 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #c9a961;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #8b6914;
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #6b5a3e;
+            font-size: 0.9em;
+            border-top: 1px solid #8b6914;
+            margin-top: 30px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2em;
+            }
+            .life-number {
+                font-size: 3em;
+            }
+            .story-container, .input-container, .history-container {
+                padding: 20px;
+            }
+        }
+
+        /* 开始界面 */
+        .start-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .start-intro {
+            font-size: 1.1em;
+            line-height: 2;
+            color: #c9a961;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .start-btn {
+            padding: 20px 60px;
+            font-size: 1.5em;
+            background: linear-gradient(135deg, #8b6914 0%, #c9a961 100%);
+            border: none;
+            border-radius: 50px;
+            color: #1a0a00;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        .rules {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .rules h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .rules ul {
+            text-align: left;
+            color: #c9a961;
+            line-height: 1.8;
+        }
+
+        .rules li {
+            margin-bottom: 10px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <!-- 标题 -->
+        <div class="header">
+            <h1 class="title">一千零一夜</h1>
+            <p class="subtitle">讲故事，续生命</p>
+        </div>
+
+        <!-- 开始界面 -->
+        <div id="startScreen" class="start-screen">
+            <p class="start-intro">
+                在古老的东方，有一位名叫山鲁佐德的女子。<br>
+                为了不被国王处死，她每晚讲一个故事，<br>
+                却总是在关键时刻停下，留待明日继续。<br>
+                就这样，她讲了一千零一夜...<br><br>
+                现在，轮到你了。<br>
+                你能讲多少夜？
+            </p>
+            <button class="start-btn" onclick="startGame()">开始讲故事</button>
+            
+            <div class="rules">
+                <h3>游戏规则</h3>
+                <ul>
+                    <li>输入一个关键词，AI 将为你生成一段故事</li>
+                    <li>故事会在关键时刻停下，你需要继续</li>
+                    <li>每成功讲一个故事，获得一天生命</li>
+                    <li>看看你能存活多少天！</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 游戏界面 -->
+        <div id="gameScreen" style="display: none;">
+            <!-- 生命计数器 -->
+            <div class="life-counter">
+                <div class="life-label">你已存活</div>
+                <div class="life-number" id="lifeCount">0</div>
+                <div class="life-unit">夜</div>
+            </div>
+
+            <!-- 故事区域 -->
+            <div class="story-container">
+                <div class="story-title" id="storyTitle">第 1 夜</div>
+                <div class="story-content" id="storyContent">
+                    <p>夜幕降临，烛火摇曳。你深吸一口气，开始讲述...</p>
+                </div>
+                <div class="cliffhanger" id="cliffhanger" style="display: none;">
+                    欲知后事如何，请听下回分解...
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="input-container">
+                <label class="input-label">输入关键词，继续你的故事</label>
+                <p class="input-hint">例如：沙漠、宝藏、骆驼、魔法、爱情...</p>
+                <input type="text" class="keyword-input" id="keywordInput" placeholder="输入关键词..." maxlength="20">
+                <button class="submit-btn" id="submitBtn" onclick="continueStory()">继续讲故事</button>
+            </div>
+
+            <!-- 历史记录 -->
+            <div class="history-container">
+                <h3 class="history-title">📖 你的故事集</h3>
+                <div class="history-list" id="historyList">
+                    <p style="text-align: center; color: #6b5a3e;">还没有故事，快开始吧！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>2401班 · 丝路漫行·帆影驼铃 · 阿里巴巴宝藏铺</p>
+            <p style="margin-top: 10px;">Powered by AI</p>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        let gameState = {
+            night: 0,
+            currentStory: '',
+            history: [],
+            isGenerating: false
+        };
+
+        // 生成星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 开始游戏
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            generateFirstStory();
+        }
+
+        // 生成第一个故事
+        async function generateFirstStory() {
+            gameState.night = 1;
+            document.getElementById('storyTitle').textContent = `第 ${gameState.night} 夜`;
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '正在生成故事...';
+            
+            // 调用后端 API 生成故事
+            try {
+                const response = await fetch('/api/story', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        night: gameState.night,
+                        keyword: '开始' 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('storyContent').innerHTML = data.story;
+                    document.getElementById('cliffhanger').style.display = 'block';
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // 备用故事
+                document.getElementById('storyContent').innerHTML = `
+                    <p>很久很久以前，在遥远的东方，有一个神秘的王国。</p>
+                    <p>王国的宝库里藏着无数珍宝，但只有最勇敢的人才能找到...</p>
+                    <p>传说中，有一盏神灯，可以实现任何愿望...</p>
+                `;
+                document.getElementById('cliffhanger').style.display = 'block';
+            }
+            
+            btn.disabled = false;
+            btn.textContent = '继续讲故事';
+        }
+
+        // 继续故事
+        async function continueStory() {
+            const keyword = document.getElementById('keywordInput').value.trim();
+            
+            if (!keyword) {
+                alert('请输入一个关键词！');
+                return;
+            }
+            
+            if (gameState.isGenerating) return;
+            
+            gameState.isGenerating = true;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '正在讲故事...';
+            
+            // 保存到历史
+            const storyPreview = document.getElementById('storyContent').textContent.substring(0, 100) + '...';
+            gameState.history.push({
+                night: gameState.night,
+                keyword: keyword,
+                preview: storyPreview
+            });
+            
+            // 更新生命计数
+            gameState.night++;
+            document.getElementById('lifeCount').textContent = gameState.night - 1;
+            
+            // 更新故事标题
+            document.getElementById('storyTitle').textContent = `第 ${gameState.night} 夜`;
+            
+            // 调用后端 API 生成故事
+            try {
+                const response = await fetch('/api/story', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        night: gameState.night,
+                        keyword: keyword 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('storyContent').innerHTML = data.story;
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // 备用故事生成
+                const backupStories = [
+                    `<p>在${keyword}的指引下，你来到了一个神秘的地方...</p><p>这里隐藏着古老的秘密，等待着勇敢者去发现...</p>`,
+                    `<p>关于${keyword}的传说，在民间流传已久...</p><p>据说，只有心地纯洁的人才能解开这个谜题...</p>`,
+                    `<p>你提到的${keyword}，让国王的眼睛闪烁着好奇的光芒...</p><p>"继续讲下去！"他命令道...</p>`
+                ];
+                document.getElementById('storyContent').innerHTML = backupStories[Math.floor(Math.random() * backupStories.length)];
+            }
+            
+            // 更新历史记录
+            updateHistory();
+            
+            // 清空输入
+            document.getElementById('keywordInput').value = '';
+            
+            btn.disabled = false;
+            btn.textContent = '继续讲故事';
+            gameState.isGenerating = false;
+        }
+
+        // 更新历史记录
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (gameState.history.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #6b5a3e;">还没有故事，快开始吧！</p>';
+                return;
+            }
+            
+            historyList.innerHTML = gameState.history.map(item => `
+                <div class="history-item">
+                    <div class="history-day">第 ${item.night} 夜</div>
+                    <div class="history-keyword">关键词：${item.keyword}</div>
+                    <div class="history-preview">${item.preview}</div>
+                </div>
+            `).reverse().join('');
+        }
+
+        // 回车提交
+        document.getElementById('keywordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                continueStory();
+            }
+        });
+
+        // 初始化
+        createStars();
+    </script>
+</body>
+</html>
