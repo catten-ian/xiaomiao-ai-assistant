@@ -1,7 +1,7 @@
 {
   "lastChecks": {
     "daily_news": 1714786800,
-    "email": null,
+    "email": 1747255100,
     "calendar": null
   },
   "notes": "每日八卦播报已通过 cron 任务在 08:00 发送到钉钉"
