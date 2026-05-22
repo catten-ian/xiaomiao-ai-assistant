@@ -32,8 +32,6 @@ const imageModels = [
   { id: "imagen-4.0-generate-001", name: "Imagen 4.0", desc: "Google", type: "imagen" },
   { id: "gemini-3.1-flash-image-preview", name: "Gemini 3.1 Flash", desc: "Google多模态", type: "gemini" },
   { id: "jimeng-image", name: "即梦", desc: "字节跳动", type: "jimeng" },
-  { id: "venice-flux", name: "Venice Flux", desc: "无审查·快速", type: "venice" },
-  { id: "venice-sd", name: "Venice SD", desc: "无审查·经典", type: "venice" },
 ]
 
 const imageSizes = [
@@ -514,12 +512,7 @@ export default function App() {
                 ))}
               </optgroup>
               <optgroup label="其他模型">
-                {imageModels.filter(m => !['nano', 'dalle', 'venice'].includes(m.type)).map(m => (
-                  <option key={m.id} value={m.id}>{m.name} - {m.desc}</option>
-                ))}
-              </optgroup>
-              <optgroup label="Venice（无审查）">
-                {imageModels.filter(m => m.type === 'venice').map(m => (
+                {imageModels.filter(m => !['nano', 'dalle'].includes(m.type)).map(m => (
                   <option key={m.id} value={m.id}>{m.name} - {m.desc}</option>
                 ))}
               </optgroup>
