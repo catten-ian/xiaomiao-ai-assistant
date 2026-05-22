@@ -1,39 +1,45 @@
 /* ============================================
-   小喵AI助手 - Neo-Brutalist + Soft Glow Theme
+   小喵AI助手 - Dreamy Fantasy Theme ✨
+   更梦幻、更柔和、更迷人
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
 
 :root {
-  /* Core palette - Deep midnight with electric accents */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a25;
-  --bg-elevated: #222230;
+  /* Dreamy palette - Deep space with soft aurora */
+  --bg-primary: #0d0d1a;
+  --bg-secondary: #131325;
+  --bg-tertiary: #1a1a32;
+  --bg-elevated: #22223d;
   
-  /* Accent colors - Electric blue + Warm amber */
-  --accent-primary: #6366f1;
-  --accent-glow: #818cf8;
-  --accent-warm: #f59e0b;
-  --accent-success: #10b981;
-  --accent-danger: #ef4444;
+  /* Dreamy accent colors - Aurora + Starlight */
+  --accent-primary: #a78bfa;      /* Soft purple */
+  --accent-secondary: #c4b5fd;    /* Lighter purple */
+  --accent-glow: #e879f9;         /* Pink glow */
+  --accent-warm: #fbbf24;         /* Golden star */
+  --accent-cyan: #22d3ee;         /* Cyan aurora */
+  --accent-pink: #f472b6;         /* Soft pink */
+  --accent-success: #34d399;
+  --accent-danger: #f87171;
   
   /* Text */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: #faf5ff;
+  --text-secondary: #c4b5fd;
+  --text-muted: #a78bfa;
   
-  /* Borders & Effects */
-  --border-subtle: rgba(99, 102, 241, 0.2);
-  --border-strong: rgba(99, 102, 241, 0.4);
-  --glow-primary: 0 0 20px rgba(99, 102, 241, 0.3);
-  --glow-strong: 0 0 40px rgba(99, 102, 241, 0.5);
+  /* Dreamy borders & effects */
+  --border-subtle: rgba(167, 139, 250, 0.2);
+  --border-strong: rgba(167, 139, 250, 0.4);
+  --glow-soft: 0 0 30px rgba(167, 139, 250, 0.4);
+  --glow-primary: 0 0 40px rgba(232, 121, 249, 0.5);
+  --glow-strong: 0 0 60px rgba(232, 121, 249, 0.6);
+  --glow-cyan: 0 0 30px rgba(34, 211, 238, 0.4);
   
   /* Spacing */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
 }
 
 * {
@@ -43,7 +49,7 @@
 }
 
 body {
-  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Quicksand', 'Noto Sans SC', sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -51,7 +57,7 @@ body {
 }
 
 /* ============================================
-   App Container - Animated Background
+   App Container - Dreamy Aurora Background ✨
    ============================================ */
 .app {
   display: flex;
@@ -63,34 +69,73 @@ body {
   background: var(--bg-primary);
 }
 
+/* Animated aurora background */
 .app::before {
   content: '';
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 1200px;
-  height: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: 
-    radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+    radial-gradient(ellipse at 10% 20%, rgba(167, 139, 250, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 80%, rgba(232, 121, 249, 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 70%, rgba(244, 114, 182, 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 30%, rgba(251, 191, 36, 0.06) 0%, transparent 30%);
+  animation: auroraShift 15s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
 }
 
+@keyframes auroraShift {
+  0%, 100% {
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    filter: hue-rotate(20deg);
+  }
+}
+
+/* Floating stars */
+.app::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(167, 139, 250, 0.4), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(232, 121, 249, 0.5), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 160px 30px, rgba(34, 211, 238, 0.4), transparent);
+  background-size: 200px 100px;
+  animation: starTwinkle 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 /* ============================================
-   Header - Bold & Clean
+   Header - Dreamy Glass Effect ✨
    ============================================ */
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(18, 18, 26, 0.8);
-  backdrop-filter: blur(20px);
+  background: rgba(19, 19, 37, 0.6);
+  backdrop-filter: blur(30px) saturate(1.2);
   border-bottom: 1px solid var(--border-subtle);
   padding: 1rem 1.5rem;
+  box-shadow: 0 4px 30px rgba(167, 139, 250, 0.1);
 }
 
 .header-content {
@@ -107,26 +152,39 @@ body {
   align-items: center;
   gap: 0.75rem;
   font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .title-icon {
-  font-size: 2rem;
-  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.5));
-  animation: iconFloat 3s ease-in-out infinite;
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 15px rgba(232, 121, 249, 0.6)) drop-shadow(0 0 30px rgba(167, 139, 250, 0.4));
+  animation: iconGlow 3s ease-in-out infinite;
 }
 
-@keyframes iconFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-3px) rotate(-5deg); }
+@keyframes iconGlow {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 15px rgba(232, 121, 249, 0.6)) drop-shadow(0 0 30px rgba(167, 139, 250, 0.4));
+  }
+  50% {
+    transform: translateY(-4px) scale(1.05);
+    filter: drop-shadow(0 0 25px rgba(232, 121, 249, 0.8)) drop-shadow(0 0 40px rgba(167, 139, 250, 0.6));
+  }
 }
 
 .title-text {
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-glow) 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-glow) 50%, var(--accent-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 /* Controls Section */
@@ -136,24 +194,26 @@ body {
   gap: 0.75rem;
 }
 
-/* Thinking Toggle - Pill Style */
+/* Thinking Toggle - Dreamy Pill */
 .thinking-toggle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: var(--bg-tertiary);
+  background: rgba(26, 26, 50, 0.8);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.875rem;
   color: var(--text-secondary);
+  backdrop-filter: blur(10px);
 }
 
 .thinking-toggle:hover {
   border-color: var(--accent-primary);
-  box-shadow: var(--glow-primary);
+  box-shadow: var(--glow-soft);
+  background: rgba(34, 34, 61, 0.9);
 }
 
 .thinking-toggle input {
@@ -161,22 +221,22 @@ body {
 }
 
 .thinking-toggle.active {
-  background: var(--accent-primary);
-  border-color: var(--accent-primary);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-glow) 100%);
+  border-color: transparent;
   color: white;
   box-shadow: var(--glow-primary);
 }
 
 .thinking-toggle .toggle-icon {
   font-size: 1.1rem;
-  transition: transform 0.3s;
+  transition: transform 0.4s;
 }
 
 .thinking-toggle.active .toggle-icon {
   transform: rotate(180deg);
 }
 
-/* Model Selector - Dropdown */
+/* Model Selector - Dreamy Dropdown */
 .model-selector {
   position: relative;
 }
@@ -186,25 +246,28 @@ body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: var(--bg-tertiary);
+  background: rgba(26, 26, 50, 0.8);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 160px;
+  backdrop-filter: blur(10px);
 }
 
 .model-button:hover {
   border-color: var(--accent-primary);
-  box-shadow: var(--glow-primary);
+  box-shadow: var(--glow-soft);
+  background: rgba(34, 34, 61, 0.9);
 }
 
 .model-button.active {
-  border-color: var(--accent-primary);
-  background: var(--bg-elevated);
+  border-color: var(--accent-glow);
+  background: rgba(34, 34, 61, 0.95);
+  box-shadow: var(--glow-soft);
 }
 
 .model-name {
@@ -224,7 +287,7 @@ body {
   transform: rotate(180deg);
 }
 
-/* Dropdown Panel */
+/* Dropdown Panel - Dreamy Glass */
 .model-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -232,20 +295,21 @@ body {
   width: 320px;
   max-height: 500px;
   overflow-y: auto;
-  background: var(--bg-secondary);
+  background: rgba(19, 19, 37, 0.95);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    var(--glow-primary);
-  animation: dropdownSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    var(--glow-soft);
+  backdrop-filter: blur(30px);
+  animation: dropdownFade 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
 }
 
-@keyframes dropdownSlide {
+@keyframes dropdownFade {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
   to {
     opacity: 1;
@@ -256,12 +320,12 @@ body {
 /* Model Group Label */
 .model-group-label {
   padding: 0.75rem 1rem 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   color: var(--text-muted);
-  background: var(--bg-tertiary);
+  background: rgba(26, 26, 50, 0.9);
   border-bottom: 1px solid var(--border-subtle);
   position: sticky;
   top: 0;
@@ -283,19 +347,19 @@ body {
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
   text-align: left;
   border-left: 3px solid transparent;
 }
 
 .model-option:hover {
-  background: var(--bg-tertiary);
+  background: rgba(34, 34, 61, 0.6);
   border-left-color: var(--accent-primary);
 }
 
 .model-option.active {
-  background: var(--bg-elevated);
-  border-left-color: var(--accent-primary);
+  background: rgba(34, 34, 61, 0.8);
+  border-left-color: var(--accent-glow);
 }
 
 .option-info {
@@ -315,10 +379,10 @@ body {
 }
 
 .model-option .check-icon {
-  color: var(--accent-primary);
+  color: var(--accent-glow);
   font-size: 1rem;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.3s;
 }
 
 .model-option.active .check-icon {
@@ -326,7 +390,7 @@ body {
 }
 
 /* ============================================
-   Main Chat Area
+   Main Chat Area - Dreamy Scroll ✨
    ============================================ */
 .main {
   flex: 1;
@@ -344,7 +408,7 @@ body {
   margin: 0 auto;
 }
 
-/* Welcome Screen */
+/* Welcome Screen - Dreamy Entrance ✨ */
 .welcome {
   display: flex;
   flex-direction: column;
@@ -352,45 +416,54 @@ body {
   justify-content: center;
   text-align: center;
   padding: 4rem 2rem;
-  animation: welcomeFade 0.6s ease-out;
+  animation: welcomeGlow 0.8s ease-out;
 }
 
-@keyframes welcomeFade {
+@keyframes welcomeGlow {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 .welcome-icon {
-  font-size: 5rem;
+  font-size: 6rem;
   margin-bottom: 1.5rem;
-  filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.4));
-  animation: iconBounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 40px rgba(232, 121, 249, 0.6)) drop-shadow(0 0 60px rgba(167, 139, 250, 0.4));
+  animation: iconPulse 3s ease-in-out infinite;
 }
 
-@keyframes iconBounce {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.1) rotate(-5deg); }
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 40px rgba(232, 121, 249, 0.6)) drop-shadow(0 0 60px rgba(167, 139, 250, 0.4));
+  }
+  50% {
+    transform: scale(1.08) rotate(-3deg);
+    filter: drop-shadow(0 0 50px rgba(232, 121, 249, 0.8)) drop-shadow(0 0 80px rgba(167, 139, 250, 0.6));
+  }
 }
 
 .welcome h2 {
-  font-size: 2rem;
-  font-weight: 900;
+  font-size: 2.2rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-glow) 100%);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-glow) 50%, var(--accent-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientShift 5s ease infinite;
 }
 
 .welcome p {
   color: var(--text-secondary);
   margin-bottom: 2rem;
+  font-size: 1.1rem;
 }
 
 .quick-actions {
@@ -401,35 +474,38 @@ body {
 }
 
 .quick-btn {
-  padding: 0.625rem 1.25rem;
-  background: var(--bg-tertiary);
+  padding: 0.75rem 1.5rem;
+  background: rgba(26, 26, 50, 0.7);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
 .quick-btn:hover {
-  border-color: var(--accent-primary);
+  border-color: var(--accent-glow);
   color: var(--text-primary);
   box-shadow: var(--glow-primary);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  background: rgba(34, 34, 61, 0.9);
 }
 
-/* Message Bubbles */
+/* Message Bubbles - Dreamy Glow ✨ */
 .message {
   display: flex;
   gap: 0.875rem;
-  animation: messageSlide 0.3s ease-out;
+  animation: messageFloat 0.4s ease-out;
   max-width: 85%;
 }
 
-@keyframes messageSlide {
+@keyframes messageFloat {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -443,16 +519,17 @@ body {
 }
 
 .message-avatar {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   flex-shrink: 0;
-  background: var(--bg-tertiary);
+  background: rgba(26, 26, 50, 0.8);
   border: 2px solid var(--border-subtle);
+  backdrop-filter: blur(10px);
 }
 
 .message.user .message-avatar {
@@ -461,71 +538,80 @@ body {
   box-shadow: var(--glow-primary);
 }
 
+.message.assistant .message-avatar {
+  box-shadow: var(--glow-soft);
+}
+
 .message-content {
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.35rem;
   border-radius: var(--radius-lg);
-  background: var(--bg-secondary);
+  background: rgba(26, 26, 50, 0.7);
   border: 1px solid var(--border-subtle);
   line-height: 1.6;
   word-wrap: break-word;
+  backdrop-filter: blur(15px);
 }
 
 .message.user .message-content {
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-glow) 100%);
   border-color: transparent;
   color: white;
-  border-radius: var(--radius-lg) var(--radius-lg) 4px var(--radius-lg);
+  border-radius: var(--radius-lg) var(--radius-lg) 8px var(--radius-lg);
+  box-shadow: var(--glow-primary);
 }
 
 .message.assistant .message-content {
-  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 4px;
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 8px;
+  box-shadow: var(--glow-soft);
 }
 
-/* Loading Animation */
+/* Loading Animation - Dreamy Dots ✨ */
 .message.loading .message-content {
   padding: 1rem;
 }
 
 .typing-indicator {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
 }
 
 .typing-indicator span {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--accent-primary);
-  animation: typingDot 1.4s infinite ease-in-out;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-glow) 100%);
+  animation: typingPulse 1.6s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(232, 121, 249, 0.5);
 }
 
 .typing-indicator span:nth-child(1) { animation-delay: 0s; }
 .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
 .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
 
-@keyframes typingDot {
+@keyframes typingPulse {
   0%, 60%, 100% {
-    transform: translateY(0);
-    opacity: 0.4;
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
   }
   30% {
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(1.2);
     opacity: 1;
   }
 }
 
 /* ============================================
-   Input Area - Footer
+   Input Area - Dreamy Glow ✨
    ============================================ */
 .footer {
   position: sticky;
   bottom: 0;
-  background: rgba(18, 18, 26, 0.8);
-  backdrop-filter: blur(20px);
+  background: rgba(19, 19, 37, 0.7);
+  backdrop-filter: blur(30px) saturate(1.2);
   border-top: 1px solid var(--border-subtle);
   padding: 1rem 1.5rem;
   z-index: 100;
+  box-shadow: 0 -4px 30px rgba(167, 139, 250, 0.1);
 }
 
 .input-container {
@@ -538,8 +624,8 @@ body {
 
 .input {
   flex: 1;
-  padding: 0.875rem 1.25rem;
-  background: var(--bg-tertiary);
+  padding: 1rem 1.35rem;
+  background: rgba(26, 26, 50, 0.8);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   color: var(--text-primary);
@@ -547,15 +633,17 @@ body {
   font-family: inherit;
   resize: none;
   max-height: 120px;
-  min-height: 48px;
+  min-height: 52px;
   line-height: 1.5;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--accent-primary);
+  border-color: var(--accent-glow);
   box-shadow: var(--glow-primary);
+  background: rgba(34, 34, 61, 0.9);
 }
 
 .input::placeholder {
@@ -563,8 +651,8 @@ body {
 }
 
 .send-button {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-glow) 100%);
   border: none;
@@ -573,14 +661,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.3rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  box-shadow: var(--glow-soft);
 }
 
 .send-button:hover:not(:disabled) {
   box-shadow: var(--glow-strong);
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .send-button:active:not(:disabled) {
@@ -594,10 +683,10 @@ body {
 }
 
 /* ============================================
-   Scrollbar Styling
+   Scrollbar Styling - Dreamy ✨
    ============================================ */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -605,12 +694,14 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
-  border-radius: 4px;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-glow) 100%);
+  border-radius: 10px;
+  opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
+  background: linear-gradient(135deg, var(--accent-glow) 0%, var(--accent-pink) 100%);
+  opacity: 0.8;
 }
 
 /* ============================================
@@ -635,11 +726,11 @@ body {
   }
   
   .welcome-icon {
-    font-size: 4rem;
+    font-size: 4.5rem;
   }
   
   .welcome h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   
   .quick-actions {
@@ -659,7 +750,7 @@ body {
   }
   
   .title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
   
   .thinking-toggle {
@@ -683,15 +774,16 @@ body {
 }
 
 /* ============================================
-   Paw Print Decorations (Optional)
+   Paw Print Decorations - Dreamy ✨
    ============================================ */
 .welcome::before,
 .welcome::after {
   content: '🐾';
   position: absolute;
-  font-size: 2rem;
-  opacity: 0.1;
-  animation: pawFloat 4s ease-in-out infinite;
+  font-size: 2.5rem;
+  opacity: 0.15;
+  animation: pawDreamy 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(232, 121, 249, 0.5));
 }
 
 .welcome::before {
@@ -703,16 +795,29 @@ body {
 .welcome::after {
   bottom: 1rem;
   right: 1rem;
-  animation-delay: 2s;
+  animation-delay: 2.5s;
 }
 
-@keyframes pawFloat {
+@keyframes pawDreamy {
   0%, 100% { 
-    transform: translateY(0) rotate(0deg);
-    opacity: 0.1;
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0.15;
   }
   50% { 
-    transform: translateY(-10px) rotate(10deg);
-    opacity: 0.2;
+    transform: translateY(-15px) rotate(15deg) scale(1.1);
+    opacity: 0.25;
   }
+}
+
+/* Extra dreamy sparkle effect */
+.welcome::before {
+  box-shadow: 
+    0 0 20px rgba(232, 121, 249, 0.3),
+    0 0 40px rgba(167, 139, 250, 0.2);
+}
+
+.welcome::after {
+  box-shadow: 
+    0 0 20px rgba(34, 211, 238, 0.3),
+    0 0 40px rgba(244, 114, 182, 0.2);
 }
