@@ -25,6 +25,10 @@ const APIs = {
     url: "https://api.v3.cm/v1/chat/completions",
     key: process.env.V3CM_API_KEY || ""
   },
+  venice: {
+    url: "https://api.venice.ai/api/v1/chat/completions",
+    key: process.env.VENICE_API_KEY || ""
+  },
 }
 
 const MODEL_API_MAP = {
@@ -39,6 +43,14 @@ const MODEL_API_MAP = {
   "deepseek/deepseek-v4-flash:free": "openrouter",
   "gpt-4o": "v3cm",
   "claude-sonnet-4-6": "v3cm",
+  "gemma-4-uncensored": "venice",
+  "e2ee-qwen3-30b-a3b-p": "venice",
+  "e2ee-qwen3-5-122b-a10b": "venice",
+  "e2ee-gpt-oss-120b-p": "venice",
+  "e2ee-qwen3-vl-30b-a3b-p": "venice",
+  "e2ee-glm-5-1": "venice",
+  "venice-uncensored-1-2": "venice",
+  "venice-uncensored-role-play": "venice",
 }
 
 const NATIVE_THINKING_MODELS = [
