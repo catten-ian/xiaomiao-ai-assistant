@@ -131,11 +131,10 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(19, 19, 37, 0.6);
+  background: rgba(19, 19, 37, 0.7);
   backdrop-filter: blur(30px) saturate(1.2);
-  border-bottom: 1px solid var(--border-subtle);
   padding: 1rem 1.5rem;
-  box-shadow: 0 4px 30px rgba(167, 139, 250, 0.1);
+  box-shadow: 0 4px 30px rgba(239, 68, 68, 0.1);
 }
 
 .header-content {
@@ -201,7 +200,7 @@ body {
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   background: rgba(26, 26, 50, 0.8);
-  border: 1px solid var(--border-subtle);
+  border: none;
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -211,9 +210,8 @@ body {
 }
 
 .thinking-toggle:hover {
-  border-color: var(--accent-primary);
-  box-shadow: var(--glow-soft);
   background: rgba(34, 34, 61, 0.9);
+  box-shadow: var(--glow-soft);
 }
 
 .thinking-toggle input {
@@ -247,7 +245,7 @@ body {
   gap: 0.5rem;
   padding: 0.625rem 1rem;
   background: rgba(26, 26, 50, 0.8);
-  border: 1px solid var(--border-subtle);
+  border: none;
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 0.9rem;
@@ -259,13 +257,11 @@ body {
 }
 
 .model-button:hover {
-  border-color: var(--accent-primary);
-  box-shadow: var(--glow-soft);
   background: rgba(34, 34, 61, 0.9);
+  box-shadow: var(--glow-soft);
 }
 
 .model-button.active {
-  border-color: var(--accent-glow);
   background: rgba(34, 34, 61, 0.95);
   box-shadow: var(--glow-soft);
 }
@@ -296,7 +292,6 @@ body {
   max-height: 500px;
   overflow-y: auto;
   background: rgba(19, 19, 37, 0.95);
-  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.5),
@@ -476,7 +471,7 @@ body {
 .quick-btn {
   padding: 0.75rem 1.5rem;
   background: rgba(26, 26, 50, 0.7);
-  border: 1px solid var(--border-subtle);
+  border: none;
   border-radius: var(--radius-lg);
   color: var(--text-secondary);
   font-size: 0.9rem;
@@ -487,9 +482,8 @@ body {
 }
 
 .quick-btn:hover {
-  border-color: var(--accent-glow);
   color: var(--text-primary);
-  box-shadow: var(--glow-primary);
+  box-shadow: var(--glow-soft);
   transform: translateY(-3px) scale(1.02);
   background: rgba(34, 34, 61, 0.9);
 }
@@ -528,7 +522,6 @@ body {
   font-size: 1.4rem;
   flex-shrink: 0;
   background: rgba(26, 26, 50, 0.8);
-  border: 2px solid var(--border-subtle);
   backdrop-filter: blur(10px);
 }
 
@@ -546,7 +539,6 @@ body {
   padding: 1rem 1.35rem;
   border-radius: var(--radius-lg);
   background: rgba(26, 26, 50, 0.7);
-  border: 1px solid var(--border-subtle);
   line-height: 1.6;
   word-wrap: break-word;
   backdrop-filter: blur(15px);
@@ -608,10 +600,9 @@ body {
   bottom: 0;
   background: rgba(19, 19, 37, 0.7);
   backdrop-filter: blur(30px) saturate(1.2);
-  border-top: 1px solid var(--border-subtle);
   padding: 1rem 1.5rem;
   z-index: 100;
-  box-shadow: 0 -4px 30px rgba(167, 139, 250, 0.1);
+  box-shadow: 0 -4px 30px rgba(6, 182, 212, 0.1);
 }
 
 .input-container {
@@ -626,7 +617,7 @@ body {
   flex: 1;
   padding: 1rem 1.35rem;
   background: rgba(26, 26, 50, 0.8);
-  border: 1px solid var(--border-subtle);
+  border: none;
   border-radius: var(--radius-lg);
   color: var(--text-primary);
   font-size: 0.95rem;
@@ -641,8 +632,7 @@ body {
 
 .input:focus {
   outline: none;
-  border-color: var(--accent-glow);
-  box-shadow: var(--glow-primary);
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3), var(--glow-soft);
   background: rgba(34, 34, 61, 0.9);
 }
 
