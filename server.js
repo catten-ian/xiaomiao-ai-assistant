@@ -125,6 +125,45 @@ app.post("/api/image", async (req, res) => {
       
       return res.json({ images })
     }
+    // Venice 图片生成 - 无审查模型
+    if (model.includes("venice") || model.includes("flux-2") || model.includes("qwen-image") || 
+        model.includes("grok-imagine") || model.includes("hunyuan") || model.includes("chroma") ||
+        model.includes("lustify") || model.includes("wai-Illustrious") || model.includes("recraft") ||
+        model.includes("seedream")) {
+      const [width, height] = size ? size.split("x").map(Number) : [512, 512]
+      
+      const veniceRes = await fetch("https://api.venice.ai/api/v1/image/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + APIs.venice.key,
+        },
+        body: JSON.stringify({
+          model,
+          prompt,
+          width: width || 512,
+          height: height || 512,
+          steps: 20,
+          safe_mode: false,
+        }),
+      })
+      
+      const data = await veniceRes.json()
+      
+      if (data.error || !data.images) {
+        return res.status(400).json({ error: data.error?.message || "生成失败" })
+      }
+      
+      const images = []
+      for (const imgBase64 of data.images) {
+        images.push({
+          image: "data:image/webp;base64," + imgBase64
+        })
+      }
+      
+      return res.json({ images })
+    }
+
     
     // DALL-E / GPT Image / Flux / Imagen 等 - 使用 v1/images/generations
     const imageRes = await fetch("https://api.v3.cm/v1/images/generations", {
