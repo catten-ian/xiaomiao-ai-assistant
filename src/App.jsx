@@ -32,6 +32,16 @@ const imageModels = [
   { id: "imagen-4.0-generate-001", name: "Imagen 4.0", desc: "Google", type: "imagen" },
   { id: "gemini-3.1-flash-image-preview", name: "Gemini 3.1 Flash", desc: "Google多模态", type: "gemini" },
   { id: "jimeng-image", name: "即梦", desc: "字节跳动", type: "jimeng" },
+  // Venice 无审查图片模型
+  { id: "venice-sd35", name: "Venice SD35", desc: "无审查·默认", type: "venice" },
+  { id: "flux-2-pro", name: "Flux 2 Pro", desc: "无审查·高质量", type: "venice" },
+  { id: "flux-2-max", name: "Flux 2 Max", desc: "无审查·顶级", type: "venice" },
+  { id: "qwen-image-2", name: "Qwen Image 2", desc: "无审查·阿里", type: "venice" },
+  { id: "grok-imagine-image", name: "Grok Imagine", desc: "无审查·马斯克", type: "venice" },
+  { id: "hunyuan-image-v3", name: "混元 3.0", desc: "无审查·腾讯", type: "venice" },
+  { id: "chroma", name: "Chroma", desc: "无审查·艺术", type: "venice" },
+  { id: "lustify-v8", name: "Lustify V8", desc: "无审查·写实", type: "venice" },
+  { id: "wai-Illustrious", name: "WAI Anime", desc: "无审查·动漫", type: "venice" },
 ]
 
 const imageSizes = [
@@ -467,18 +477,18 @@ export default function App() {
               </button>
             ))}
             <div className="model-group-label">付费模型</div>
-            <div className="model-group-label">非审查模型</div>
-            {models.filter(m => m.api === 'venice').map(m => (
+            {models.filter(m => m.api === 'v3cm').map(m => (
               <button
                 key={m.id}
                 className={"model-option " + (m.id === model ? "active" : "")}
                 onClick={() => { setModel(m.id); setShowModels(false) }}
               >
-                <span className="model-name">{m.name}</span>
-                <span className="model-desc">{m.desc}</span>
+                <span className="option-name">{m.name}</span>
+                <span className="option-desc">{m.desc}</span>
               </button>
             ))}
-            {models.filter(m => m.api !== 'openrouter').map(m => (
+            <div className="model-group-label">非审查模型</div>
+            {models.filter(m => m.api === 'venice').map(m => (
               <button
                 key={m.id}
                 className={"model-option " + (m.id === model ? "active" : "")}
@@ -511,8 +521,13 @@ export default function App() {
                   <option key={m.id} value={m.id}>{m.name} - {m.desc}</option>
                 ))}
               </optgroup>
+              <optgroup label="Venice 无审查">
+                {imageModels.filter(m => m.type === 'venice').map(m => (
+                  <option key={m.id} value={m.id}>{m.name} - {m.desc}</option>
+                ))}
+              </optgroup>
               <optgroup label="其他模型">
-                {imageModels.filter(m => !['nano', 'dalle'].includes(m.type)).map(m => (
+                {imageModels.filter(m => !['nano', 'dalle', 'venice'].includes(m.type)).map(m => (
                   <option key={m.id} value={m.id}>{m.name} - {m.desc}</option>
                 ))}
               </optgroup>
