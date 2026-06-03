@@ -4,24 +4,6 @@ import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import 'highlight.js/styles/github-dark.css'
 import "./App.css"
-import { Sidebar } from './components/Sidebar'
-import './components/Sidebar.css'
-import { getConversations, createConversation, updateConversation, deleteConversation } from './utils/storage'
-import { 
-  isSyncEnabled as cloudIsSyncEnabled, 
-  setSyncEnabled as cloudSetSyncEnabled, 
-  initSync as cloudInitSync,
-  isOnline as cloudIsOnline,
-  onHealthChange as cloudOnHealthChange,
-  syncCreateConversation,
-  syncUpdateConversation,
-  syncDeleteConversation,
-  syncMessages as cloudSyncMessages,
-  fetchCloudConversations,
-  fetchCloudMessages,
-  pushAllToCloud,
-  pullCloudConversation
-} from './utils/cloudSync'
 
 const models = [
   { id: "meta-llama/llama-3.2-3b-instruct:free", name: "Llama 3.2 3B", desc: "轻量快速", api: "openrouter", vision: false, thinking: false },
@@ -33,13 +15,9 @@ const models = [
   { id: "liquid/lfm-2.5-1.2b-thinking:free", name: "LFM2.5 Thinking", desc: "轻量思考", api: "openrouter", vision: false, thinking: true },
   { id: "qwen/qwen3-next-80b-a3b-instruct:free", name: "Qwen3 80B", desc: "阿里旗舰", api: "openrouter", vision: false, thinking: false },
   { id: "deepseek/deepseek-v4-flash:free", name: "DeepSeek V4", desc: "国产之光", api: "openrouter", vision: false, thinking: false },
+  { id: "gemma-4-uncensored", name: "Gemma 4 非审查版", desc: "Venice·无限制", api: "venice", vision: false, thinking: false },
   { id: "gpt-4o", name: "GPT-4o", desc: "最强多模态", api: "v3cm", vision: true, thinking: false },
   { id: "claude-sonnet-4-6", name: "Claude Sonnet 4.6", desc: "编程最强", api: "v3cm", vision: false, thinking: false },
-  { id: "ark-code-latest", name: "Ark Code", desc: "火山·编程", api: "volcengine", vision: false, thinking: false },
-  { id: "deepseek-v4-pro", name: "DeepSeek V4 Pro", desc: "火山·DeepSeek", api: "volcengine", vision: false, thinking: false },
-  { id: "glm-5-1", name: "GLM 5.1", desc: "火山·智谱", api: "volcengine", vision: false, thinking: false },
-  { id: "deepseek-v4-flash", name: "DeepSeek V4 Flash", desc: "火山·轻量", api: "volcengine", vision: false, thinking: false },
-  { id: "gemma-4-uncensored", name: "Gemma 4 非审查版", desc: "Venice·无限制", api: "venice", vision: false, thinking: false },
 { id: "e2ee-qwen3-30b-a3b-p", name: "Qwen3 30B 非审查", desc: "Venice·最强", api: "venice", vision: false, thinking: false },  { id: "e2ee-qwen3-5-122b-a10b", name: "Qwen3 122B 非审查", desc: "Venice·超大", api: "venice", vision: false, thinking: false },  { id: "e2ee-gpt-oss-120b-p", name: "GPT OSS 120B 非审查", desc: "Venice·GPT系", api: "venice", vision: false, thinking: false },  { id: "e2ee-qwen3-vl-30b-a3b-p", name: "Qwen3 VL 30B 非审查", desc: "Venice·多模态", api: "venice", vision: true, thinking: false },  { id: "e2ee-glm-5-1", name: "GLM 5.1 非审查", desc: "Venice·智谱", api: "venice", vision: false, thinking: false },  { id: "venice-uncensored-1-2", name: "Venice 非审查 1.2", desc: "Venice原生", api: "venice", vision: false, thinking: false },  { id: "venice-uncensored-role-play", name: "Venice 角色扮演", desc: "Venice·RP", api: "venice", vision: false, thinking: false },
 ]
 
@@ -118,101 +96,24 @@ export default function App() {
   const fileInputRef = useRef(null)
   const refImageRef = useRef(null)
   const thinkingStateRef = useRef({ inThinking: false, buffer: "" })
-  
-  // 侧栏相关状态 - 移动端默认收起，桌面端默认显示
-  const [showSidebar, setShowSidebar] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 769
-    }
-    return true
-  })
-  const [currentConversation, setCurrentConversation] = useState(null)
-  const [conversations, setConversations] = useState([])
-  const [cloudSyncEnabled, setCloudSyncEnabled] = useState(() => cloudIsSyncEnabled())
-  const [cloudOnline, setCloudOnline] = useState(false)
-  const [showCloudPanel, setShowCloudPanel] = useState(false)
-  const [cloudBackups, setCloudBackups] = useState([])
-  const [cloudBusy, setCloudBusy] = useState(false)
-  const [cloudStatus, setCloudStatus] = useState('')
-
-  // 初始化云端同步
-  useEffect(() => {
-    if (!cloudSyncEnabled) {
-      setCloudOnline(false)
-      return
-    }
-    cloudInitSync()
-    setCloudOnline(cloudIsOnline())
-    const unsubscribe = cloudOnHealthChange((ok) => setCloudOnline(ok))
-    return unsubscribe
-  }, [cloudSyncEnabled])
 
   useEffect(() => {
     const saved = getCookie('chat_history')
     if (saved && Array.isArray(saved)) {
       setMessages(saved)
     }
-    
-    // 加载对话列表
-    const savedConversations = getConversations()
-    setConversations(savedConversations)
-    
-    // 监听窗口大小变化
-    const handleResize = () => {
-      if (window.innerWidth >= 769) {
-        setShowSidebar(true) // 桌面端自动展开
-      }
-    }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   useEffect(() => {
     if (messages.length > 0) {
       const toSave = messages.slice(-50)
       setCookie('chat_history', toSave, 7)
-      
-      // 保存到当前对话
-      if (currentConversation) {
-        updateConversation(currentConversation.id, { messages: toSave })
-        // 云端同步新增消息
-        cloudSyncMessages(currentConversation.id, toSave)
-      }
     }
-  }, [messages, currentConversation])
+  }, [messages])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
-  
-  // 选择对话
-  const handleSelectConversation = (conversation) => {
-    setCurrentConversation(conversation)
-    setMessages(conversation.messages || [])
-  }
-  
-  // 新建对话
-  const handleNewConversation = () => {
-    const conversation = createConversation('新对话', [])
-    setConversations([conversation, ...conversations])
-    setCurrentConversation(conversation)
-    setMessages([])
-    setCookie('chat_history', [], 7)
-    // 云端同步
-    syncCreateConversation(conversation)
-  }
-  
-  // 删除对话
-  const handleDeleteConversation = (id) => {
-    deleteConversation(id)
-    setConversations(conversations.filter(c => c.id !== id))
-    if (currentConversation && currentConversation.id === id) {
-      setCurrentConversation(null)
-      setMessages([])
-    }
-    // 云端同步
-    syncDeleteConversation(id)
-  }
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
@@ -523,31 +424,13 @@ export default function App() {
 
   return (
     <div className="app">
-      {/* 侧栏 */}
-      <Sidebar
-        onSelectConversation={handleSelectConversation}
-        currentConversationId={currentConversation?.id}
-        isOpen={showSidebar}
-        onClose={() => setShowSidebar(false)}
-      />
-      
-      {/* 移动端遮罩层 */}
-      {showSidebar && typeof window !== 'undefined' && window.innerWidth < 769 && (
-        <div className="sidebar-overlay" onClick={() => setShowSidebar(false)} />
-      )}
-      
-      {/* 主内容区 */}
-      <div className="main-container">
-        <header className="header">
+      <header className="header">
         <div className="header-content">
           <h1 className="title">
             <span className="title-icon">🐱</span>
             <span className="title-text">小喵AI</span>
           </h1>
           <div className="controls">
-            <button className="sidebar-toggle" onClick={() => setShowSidebar(!showSidebar)}>
-              ☰
-            </button>
             <button className="model-button" onClick={() => setShowModels(!showModels)}>
               <span className="model-name">{currentModel?.name}</span>
               <span className="model-arrow">▼</span>
@@ -568,25 +451,6 @@ export default function App() {
               />
               <span>🧠 思考模式</span>
             </label>
-            <label className="menu-item toggle-item">
-              <input 
-                type="checkbox" 
-                checked={cloudSyncEnabled} 
-                onChange={(e) => {
-                  cloudSetSyncEnabled(e.target.checked)
-                  setCloudSyncEnabled(e.target.checked)
-                  if (e.target.checked) {
-                    cloudInitSync()
-                  }
-                }}
-              />
-              <span>☁️ 云端同步 {cloudSyncEnabled && (cloudOnline ? '🟢' : '🔴')}</span>
-            </label>
-            {cloudSyncEnabled && (
-              <button onClick={() => { setShowCloudPanel(true); setShowMenu(false) }} className="menu-item">
-                💾 云端备份管理
-              </button>
-            )}
             <button onClick={() => { setShowImageGen(true); setShowMenu(false) }} className="menu-item">
               🎨 图片生成
             </button>
@@ -613,29 +477,18 @@ export default function App() {
               </button>
             ))}
             <div className="model-group-label">付费模型</div>
-            {models.filter(m => m.api === 'v3cm').map(m => (
-              <button
-                key={m.id}
-                className={"model-option " + (m.id === model ? "active" : "")}
-                onClick={() => { setModel(m.id); setShowModels(false) }}
-              >
-                <span className="option-name">{m.name}</span>
-                <span className="option-desc">{m.desc}</span>
-              </button>
-            ))}
-            <div className="model-group-label">火山引擎</div>
-            {models.filter(m => m.api === 'volcengine').map(m => (
-              <button
-                key={m.id}
-                className={"model-option " + (m.id === model ? "active" : "")}
-                onClick={() => { setModel(m.id); setShowModels(false) }}
-              >
-                <span className="option-name">{m.name}</span>
-                <span className="option-desc">{m.desc}</span>
-              </button>
-            ))}
             <div className="model-group-label">非审查模型</div>
             {models.filter(m => m.api === 'venice').map(m => (
+              <button
+                key={m.id}
+                className={"model-option " + (m.id === model ? "active" : "")}
+                onClick={() => { setModel(m.id); setShowModels(false) }}
+              >
+                <span className="model-name">{m.name}</span>
+                <span className="model-desc">{m.desc}</span>
+              </button>
+            ))}
+            {models.filter(m => m.api !== 'openrouter').map(m => (
               <button
                 key={m.id}
                 className={"model-option " + (m.id === model ? "active" : "")}
@@ -648,134 +501,6 @@ export default function App() {
           </div>
         )}
       </header>
-
-      {showCloudPanel && (
-        <div className="modal-overlay" onClick={() => setShowCloudPanel(false)}>
-          <div className="image-gen-panel" onClick={(e) => e.stopPropagation()} style={{maxWidth: 600, maxHeight: '85vh', overflowY: 'auto'}}>
-            <div className="image-gen-header">
-              <span>☁️ 云端备份管理</span>
-              <button onClick={() => setShowCloudPanel(false)} className="close-panel">×</button>
-            </div>
-            <div style={{padding: '16px', color: '#e0e0e0', fontSize: 14, lineHeight: 1.7}}>
-              <p>状态：{cloudOnline ? '🟢 已连接云端' : '🔴 未连接'}</p>
-              {cloudStatus && (
-                <p style={{padding: '8px 12px', background: 'rgba(34,197,94,0.1)', borderRadius: 6, fontSize: 13}}>
-                  {cloudStatus}
-                </p>
-              )}
-              <p style={{opacity: 0.7, fontSize: 12}}>
-                · 本地数据仍是主存储，云端作为镜像备份<br/>
-                · 新建/删除对话会自动同步到云端<br/>
-                · 消息增量同步（仅添加新消息）
-              </p>
-              
-              <div style={{display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap'}}>
-                <button 
-                  disabled={cloudBusy}
-                  onClick={async () => {
-                    setCloudBusy(true)
-                    setCloudStatus('正在推送本地对话到云端...')
-                    try {
-                      const localConvs = getConversations()
-                      const result = await pushAllToCloud(localConvs)
-                      setCloudStatus(`✅ 推送完成：新增 ${result.pushed} 个对话、${result.skipped} 个已同步、${result.messagesPushed} 条消息${result.errors.length ? ` (${result.errors.length} 个错误)` : ''}`)
-                    } catch (e) {
-                      setCloudStatus('❌ ' + e.message)
-                    } finally {
-                      setCloudBusy(false)
-                    }
-                  }}
-                  className="image-gen-btn"
-                >
-                  ⬆️ 首次全量推送本地→云端
-                </button>
-                
-                <button 
-                  disabled={cloudBusy}
-                  onClick={async () => {
-                    setCloudBusy(true)
-                    setCloudStatus('正在获取云端备份...')
-                    try {
-                      const list = await fetchCloudConversations()
-                      setCloudBackups(list)
-                      setCloudStatus(`云端共 ${list.length} 个备份`)
-                    } catch (e) {
-                      setCloudStatus('❌ ' + e.message)
-                    } finally {
-                      setCloudBusy(false)
-                    }
-                  }}
-                  className="image-gen-btn"
-                >
-                  🔄 刷新备份列表
-                </button>
-              </div>
-              
-              {cloudBackups.length > 0 && (
-                <div style={{marginTop: 16, borderTop: '1px solid #333', paddingTop: 12}}>
-                  <p style={{marginBottom: 8, fontWeight: 'bold'}}>云端备份列表（点击恢复到本地）：</p>
-                  <div style={{maxHeight: 280, overflowY: 'auto'}}>
-                    {cloudBackups.map(c => (
-                      <div 
-                        key={c.id}
-                        style={{
-                          padding: '8px 12px',
-                          margin: '4px 0',
-                          background: 'rgba(255,255,255,0.05)',
-                          borderRadius: 6,
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: 8
-                        }}
-                      >
-                        <div style={{flex: 1, overflow: 'hidden'}}>
-                          <div style={{fontSize: 13, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                            {c.title}
-                          </div>
-                          <div style={{fontSize: 11, opacity: 0.6}}>
-                            {c.message_count || 0} 条 · ID: {c.id}
-                          </div>
-                        </div>
-                        <button
-                          disabled={cloudBusy}
-                          onClick={async () => {
-                            setCloudBusy(true)
-                            try {
-                              const localConv = await pullCloudConversation(c.id)
-                              // 保存到本地
-                              const data = JSON.parse(localStorage.getItem('freechat_data') || '{"conversations":[],"folders":[],"tags":[],"searchHistory":[]}')
-                              data.conversations.unshift(localConv)
-                              localStorage.setItem('freechat_data', JSON.stringify(data))
-                              setConversations([localConv, ...conversations])
-                              setCloudStatus(`✅ 已恢复「${localConv.title}」到本地（${localConv.messages.length} 条消息）`)
-                            } catch (e) {
-                              setCloudStatus('❌ ' + e.message)
-                            } finally {
-                              setCloudBusy(false)
-                            }
-                          }}
-                          style={{
-                            padding: '4px 10px',
-                            background: 'rgba(34,197,94,0.2)',
-                            border: '1px solid rgba(34,197,94,0.4)',
-                            borderRadius: 4,
-                            color: '#22c55e',
-                            cursor: 'pointer',
-                            fontSize: 12
-                          }}
-                        >
-                          ⬇️ 恢复
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {showImageGen && (
         <div className="modal-overlay" onClick={() => setShowImageGen(false)}>
@@ -980,7 +705,6 @@ export default function App() {
           </button>
         </div>
       </footer>
-      </div>
     </div>
   )
 }
