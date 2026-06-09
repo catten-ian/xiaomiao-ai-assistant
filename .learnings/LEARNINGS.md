@@ -17,3 +17,21 @@
 
 ### Metadata
 - Source: heartbeat
+## [LRN-20260609-001] Heartbeat Status Check
+**Logged**: 2026-06-09T04:25:00+08:00
+**Priority**: medium
+**Status**: pending
+**Area**: infra
+
+### Summary
+心跳检查发现网站 www.catten.cyou 返回 404 错误，Hook daemon 脚本不存在
+
+### Details
+- 邮件检查 API 正常，收件箱为空
+- Curator 服务正常运行（每30分钟触发）
+- 网站 www.catten.cyou 返回 404（可能需要检查）
+- Hook daemon 脚本路径 `/workspace/.scripts/hooks/daemon.sh` 不存在
+
+### Metadata
+- Source: heartbeat
+- Related Files: /workspace/.learnings/LEARNINGS.md
