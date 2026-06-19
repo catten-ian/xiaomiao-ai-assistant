@@ -35,3 +35,22 @@
 ### Metadata
 - Source: heartbeat
 - Related Files: /workspace/.learnings/LEARNINGS.md
+
+## [LRN-20260618-001] 网站状态持续异常
+**Logged**: 2026-06-18T08:06:00+08:00
+**Priority**: medium
+**Status**: pending
+**Area**: infra
+
+### Summary
+网站 www.catten.cyou 持续返回 404 错误，已连续多日检测到此问题
+
+### Details
+- 邮件检查：正常，无重要未读邮件
+- MJ/Suno 任务：无未完成任务
+- 网站状态：www.catten.cyou 返回 404（响应时间约 0.5 秒）
+- 此问题在 6月9日、6月10日已记录，建议用户检查网站配置
+
+### Metadata
+- Source: heartbeat
+- Related Files: /workspace/.learnings/LEARNINGS.md
