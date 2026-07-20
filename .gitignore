@@ -4,3 +4,8 @@ dist/
 *.log
 .DS_Store
 *.bak
+.env.bak.*
+ws_probe.mjs
+data/*.db-shm
+data/*.db-wal
+assets/index-*.js
