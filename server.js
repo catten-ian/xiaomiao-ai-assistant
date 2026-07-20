@@ -36,6 +36,10 @@ const APIs = {
     url: "https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions",
     key: process.env.VOLCENGINE_KEY || "ark-371e8ce6-5664-4622-b6b8-baf74407e5c1-d87f3"
   },
+  minimax: {
+    url: "https://api.minimaxi.com/v1/chat/completions",
+    key: process.env.MINIMAX_KEY || "sk-cp-TCU1rRHEjSIurOGIBE3Ah9vEhTIpT7f7rQxmiaBb8Cp3w-MMPtyiPQgM3JVO-vHhYIYlCfFpZz9varTq6NvFyESSRbjdnq1sBtrDpkX6Zs5BvLMELfu_FYs"
+  },
 }
 
 const MODEL_API_MAP = {
@@ -62,6 +66,7 @@ const MODEL_API_MAP = {
   "e2ee-glm-5-1": "venice",
   "venice-uncensored-1-2": "venice",
   "venice-uncensored-role-play": "venice",
+  "MiniMax-M3": "minimax",
 }
 
 const NATIVE_THINKING_MODELS = [
@@ -171,7 +176,7 @@ app.post("/api/image", async (req, res) => {
 
 // WebSocket 服务器
 const server = createServer(app)
-const wss = new WebSocketServer({ server, path: "/ai/api/ws" })
+const wss = new WebSocketServer({ server, path: "/api/ws" })
 
 wss.on("connection", (ws) => {
   ws.on("message", async (data) => {
