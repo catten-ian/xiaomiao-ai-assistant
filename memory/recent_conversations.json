@@ -1,0 +1,13 @@
+[
+  {
+    "timestamp": "2026-07-21T01:56:22.959169",
+    "type": "heartbeat",
+    "session": "heartbeat",
+    "summary": "Heartbeat poll - EMAIL_CHECK internal, no important emails, systems nominal"
+  },
+  {
+    "timestamp": "2026-07-21T23:09:00+08:00",
+    "type": "heartbeat",
+    "summary": "Heartbeat poll at 23:09 CST - all systems normal"
+  }
+]
